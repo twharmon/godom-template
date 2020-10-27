@@ -1,0 +1,18 @@
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script src="https://kit.fontawesome.com/709979ff93.js" crossorigin="anonymous"></script>
+		<script src="wasm_exec.js"></script>
+		<link rel="stylesheet" href="/main.css">
+	</head>
+	<body>
+		<div id="root"></div>
+		<script>
+			const go = new Go()
+			WebAssembly.instantiateStreaming(fetch('main.wasm'), go.importObject).then(res => {
+				go.run(res.instance)
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,20 @@
+{
+    "go.toolsEnvVars": {
+        "GOARCH":"wasm",
+        "GOOS":"js",
+    },
+    "filewatcher.commands": [
+        {
+            "match": "\\.go*",
+            "isAsync": true,
+            "cmd": "cd ${workspaceRoot} && GOOS=js GOARCH=wasm go build -o server/static/main.wasm && gzip server/static/main.wasm --best && mv server/static/main.wasm.gz server/static/main.wasm",
+            "event": "onFileChange"
+        },
+        {
+            "match": "\\.scss*",
+            "isAsync": true,
+            "cmd": "cd ${workspaceRoot} && sass main.scss server/static/main.css --style compressed",
+            "event": "onFileChange"
+        }
+    ]
+}

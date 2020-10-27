@@ -1,0 +1,13 @@
+html, body {
+    margin: 0;
+    background: #000;
+    color: #999;
+}
+
+#root {
+    max-width: 600px;
+    margin: auto;
+}
+
+@import "./components/btn.scss";
+@import "./todos/view.scss";
