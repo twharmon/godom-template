@@ -19,7 +19,6 @@ func List(ps godom.RouteParams) godom.Renderer {
 // Render .
 func (r *list) Render(root *godom.Elem) {
 	listContainer := godom.Create("div")
-	root.AppendElem(listContainer)
 
 	todoCh := make(chan []*Todo)
 	btn := components.NewButton()
@@ -29,6 +28,8 @@ func (r *list) Render(root *godom.Elem) {
 		listContainer.Text("Loading...")
 		r.getTodos(todoCh)
 	}
+
+	root.AppendElem(listContainer)
 
 	go r.getTodos(todoCh)
 
