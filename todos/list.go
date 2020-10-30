@@ -18,46 +18,34 @@ func List(ps godom.RouteParams) godom.Component {
 
 // Render .
 func (r *list) Render() *godom.Elem {
-	root := godom.Create("div")
 	listContainer := godom.Create("div")
 
-	todoCh := make(chan []*Todo)
 	btn := components.NewButton()
 	go func() {
 		btn.Text <- "Reload"
 		btn.Handler <- func(e *godom.MouseEvent) {
 			listContainer.Text("Loading...")
-			r.getTodos(todoCh)
+			r.getTodos(listContainer)
 		}
 	}()
 
+	go r.getTodos(listContainer)
+	go func() { <-r.Quit }()
+
+	root := godom.Create("div")
 	root.Append(btn, listContainer)
-
-	go r.getTodos(todoCh)
-
-	go func() {
-		for {
-			select {
-			case todos := <-todoCh:
-				listContainer.Clear()
-				for _, todo := range todos {
-					listContainer.Append(view(todo))
-				}
-			case <-r.Quit:
-				return
-			}
-		}
-	}()
-
 	return root
 }
 
-func (r *list) getTodos(todoCh chan []*Todo) {
+func (r *list) getTodos(e *godom.Elem) {
 	var todos []*Todo
 	err := r.HTTP(http.MethodGet, "https://jsonplaceholder.typicode.com/todos", nil).FromJSON(&todos, func(res *http.Response) {
 		switch res.StatusCode {
 		case http.StatusOK:
-			todoCh <- todos
+			e.Clear()
+			for _, todo := range todos {
+				e.Append(view(todo))
+			}
 		default:
 			godom.Log(res.Status)
 		}
