@@ -8,28 +8,30 @@ import (
 )
 
 type list struct {
-	godom.Component
+	godom.BaseComponent
 }
 
 // List .
-func List(ps godom.RouteParams) godom.Renderer {
+func List(ps godom.RouteParams) godom.Component {
 	return &list{}
 }
 
 // Render .
-func (r *list) Render(root *godom.Elem) {
+func (r *list) Render() *godom.Elem {
+	root := godom.Create("div")
 	listContainer := godom.Create("div")
 
 	todoCh := make(chan []*Todo)
 	btn := components.NewButton()
-	godom.Mount(btn, root)
-	btn.Text <- "Reload"
-	btn.Handler <- func(e *godom.MouseEvent) {
-		listContainer.Text("Loading...")
-		r.getTodos(todoCh)
-	}
+	go func() {
+		btn.Text <- "Reload"
+		btn.Handler <- func(e *godom.MouseEvent) {
+			listContainer.Text("Loading...")
+			r.getTodos(todoCh)
+		}
+	}()
 
-	root.AppendElem(listContainer)
+	root.Append(btn, listContainer)
 
 	go r.getTodos(todoCh)
 
@@ -39,13 +41,15 @@ func (r *list) Render(root *godom.Elem) {
 			case todos := <-todoCh:
 				listContainer.Clear()
 				for _, todo := range todos {
-					listContainer.AppendElem(view(todo))
+					listContainer.Append(view(todo))
 				}
 			case <-r.Quit:
 				return
 			}
 		}
 	}()
+
+	return root
 }
 
 func (r *list) getTodos(todoCh chan []*Todo) {

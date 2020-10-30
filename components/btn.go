@@ -6,7 +6,7 @@ import (
 
 // Button .
 type Button struct {
-	godom.Component
+	godom.BaseComponent
 	Text     chan string
 	Handler  chan func(*godom.MouseEvent)
 	Disabled chan bool
@@ -22,9 +22,8 @@ func NewButton() *Button {
 }
 
 // Render .
-func (b *Button) Render(root *godom.Elem) {
+func (b *Button) Render() *godom.Elem {
 	btn := godom.Create("button")
-	root.AppendElem(btn)
 
 	go func() {
 		for {
@@ -40,4 +39,6 @@ func (b *Button) Render(root *godom.Elem) {
 			}
 		}
 	}()
+
+	return btn
 }

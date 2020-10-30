@@ -9,18 +9,17 @@ import (
 
 // Home .
 type Home struct {
-	godom.Component
+	godom.BaseComponent
 }
 
 // New .
-func New(ps godom.RouteParams) godom.Renderer {
+func New(ps godom.RouteParams) godom.Component {
 	return &Home{}
 }
 
 // Render .
-func (h *Home) Render(root *godom.Elem) {
+func (h *Home) Render() *godom.Elem {
 	p := godom.Create("p")
-	root.AppendElem(p)
 
 	state := data.Store.Subscribe()
 
@@ -35,4 +34,6 @@ func (h *Home) Render(root *godom.Elem) {
 			}
 		}
 	}()
+
+	return p
 }

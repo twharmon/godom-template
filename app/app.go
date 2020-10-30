@@ -11,7 +11,7 @@ import (
 
 // App .
 type App struct {
-	godom.Component
+	godom.BaseComponent
 }
 
 // New .
@@ -20,7 +20,7 @@ func New() *App {
 }
 
 // Render .
-func (a *App) Render(root *godom.Elem) {
+func (a *App) Render() *godom.Elem {
 	router := godom.NewRouter()
 
 	router.On("/", home.New)
@@ -30,12 +30,12 @@ func (a *App) Render(root *godom.Elem) {
 	outlet := godom.Create("div")
 	router.Mount(outlet)
 
-	root.AppendElem(nav(), outlet)
+	return godom.Create("div").Append(nav(), outlet)
 }
 
 func nav() *godom.Elem {
 	nav := godom.Create("ul")
-	nav.AppendElem(
+	nav.Append(
 		navItem("Home", "/"),
 		navItem("Hello", "/hello/Jimmy"),
 		navItem("Todos", "/todos"),
@@ -46,6 +46,6 @@ func nav() *godom.Elem {
 func navItem(text string, href string) *godom.Elem {
 	a := godom.Create("a").Text(text).Attr("href", fmt.Sprintf("/#%s", href))
 	li := godom.Create("li")
-	li.AppendElem(a)
+	li.Append(a)
 	return li
 }

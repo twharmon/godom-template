@@ -8,6 +8,6 @@ import (
 
 func main() {
 	app := app.New()
-	godom.Mount(app, godom.Root("#root"))
+	godom.Root("#root").Append(app)
 	<-app.Quit
 }

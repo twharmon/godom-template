@@ -8,12 +8,12 @@ import (
 
 // Hello .
 type Hello struct {
-	godom.Component
+	godom.BaseComponent
 	name string
 }
 
 // New .
-func New(ps godom.RouteParams) godom.Renderer {
+func New(ps godom.RouteParams) godom.Component {
 	name := ps.Get("name")
 	data.Store.SetUser(data.User{ID: 5, Name: name})
 	return &Hello{
@@ -22,8 +22,8 @@ func New(ps godom.RouteParams) godom.Renderer {
 }
 
 // Render .
-func (r *Hello) Render(root *godom.Elem) {
+func (r *Hello) Render() *godom.Elem {
 	p := godom.Create("p").Text(r.name)
-	root.AppendElem(p)
 	go func() { <-r.Quit }()
+	return p
 }
