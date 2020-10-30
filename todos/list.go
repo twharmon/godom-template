@@ -24,8 +24,12 @@ func (r *list) Render() *godom.Elem {
 	go func() {
 		btn.Text <- "Reload"
 		btn.Handler <- func(e *godom.MouseEvent) {
+			btn.Disabled <- true
+			btn.Text <- "Reloading..."
 			listContainer.Text("Loading...")
 			r.getTodos(listContainer)
+			btn.Text <- "Reload"
+			btn.Disabled <- false
 		}
 	}()
 
